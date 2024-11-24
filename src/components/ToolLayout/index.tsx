@@ -1,11 +1,7 @@
 import { FC, ReactNode, useState } from 'react';
-import { Box, IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { Box } from '@mui/material';
 import ToolsNav from '../ToolsNav';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-
-const DRAWER_WIDTH = 240;
+import TopNav from '../TopNav';
 
 interface ToolLayoutProps {
   children: ReactNode;
@@ -16,54 +12,20 @@ const ToolLayout: FC<ToolLayoutProps> = ({ children }) => {
 
   return (
     <Box sx={{ display: 'flex' }}>
+      <TopNav />
       <ToolsNav open={isNavOpen} />
       <Box
         component="main"
         sx={{
           flexGrow: 1,
+          pt: '64px',
           transition: theme => theme.transitions.create(['margin'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
           }),
           minHeight: '100vh',
-          position: 'relative'
         }}
       >
-        <Box
-          sx={{
-            position: 'fixed',
-            left: isNavOpen ? DRAWER_WIDTH : 0,
-            top: 0,
-            bottom: 0,
-            width: '1px',
-            bgcolor: 'divider',
-            zIndex: 1200,
-            transition: theme => theme.transitions.create(['left'], {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.leavingScreen,
-            }),
-          }}
-        >
-          <IconButton
-            onClick={() => setIsNavOpen(!isNavOpen)}
-            size="small"
-            sx={{
-              position: 'absolute',
-              left: -16,
-              top: '50%',
-              transform: 'translateY(-50%)',
-              bgcolor: 'background.paper',
-              border: '1px solid',
-              borderColor: 'divider',
-              boxShadow: 1,
-              '&:hover': {
-                bgcolor: 'background.paper',
-              }
-            }}
-          >
-            {isNavOpen ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </Box>
         {children}
       </Box>
     </Box>
