@@ -375,6 +375,14 @@ module.exports = function (webpackEnv) {
           babelRuntimeRegenerator,
         ]),
       ],
+      fallback: {
+        "fs": false,
+        "util": require.resolve("util/"),
+        "stream": require.resolve("stream-browserify"),
+        "zlib": require.resolve("browserify-zlib"),
+        "assert": require.resolve("assert/"),
+        "buffer": require.resolve("buffer/"),
+      },
     },
     module: {
       strictExportPresence: true,
@@ -816,6 +824,10 @@ module.exports = function (webpackEnv) {
             },
           },
         }),
+      new webpack.ProvidePlugin({
+        Buffer: ['buffer', 'Buffer'],
+        process: 'process/browser',
+      }),
     ].filter(Boolean),
     // Turn off performance processing because we utilize
     // our own hints via the FileSizeReporter

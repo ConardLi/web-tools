@@ -51,6 +51,20 @@ export const TOOLS: Tool[] = [
     description: '在线压缩图片，支持批量处理',
     icon: 'Image',
     tags: ['图片工具']
+  },
+  {
+    id: 'image-converter',
+    name: '图片格式转换',
+    description: '在线转换图片格式，支持PNG/JPG/WEBP',
+    icon: 'Transform',
+    tags: ['图片工具']
+  },
+  {
+    id: 'favicon-generator',
+    name: '图标生成器',
+    description: '生成网站图标（favicon）',
+    icon: 'Image',
+    tags: ['图片工具']
   }
 ]; 
 

@@ -55,6 +55,8 @@ const toolEntries = {
   jsonFormatter: resolveModule(resolveApp, 'src/tools/JSONFormatter/entry'),
   colorPalette: resolveModule(resolveApp, 'src/tools/ColorPalette/entry'),
   imageCompressor: resolveModule(resolveApp, 'src/tools/ImageCompressor/entry'),
+  imageConverter: resolveModule(resolveApp, 'src/tools/ImageConverter/entry'),
+  faviconGenerator: resolveModule(resolveApp, 'src/tools/FaviconGenerator/entry'),
 };
 
 // config after eject: we're in ./config/

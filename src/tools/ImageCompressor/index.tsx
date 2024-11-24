@@ -4,7 +4,7 @@ import ToolPageLayout from '../../components/ToolPageLayout';
 import { CompressorContainer } from './styles';
 import type { CompressionOptions, CompressionResult } from './utils';
 import { compressImage, downloadFile } from './utils';
-import DropZone from './components/DropZone';
+import DropZone from '../../components/DropZone';
 import ProgressBar from './components/ProgressBar';
 import ResultCard from './components/ResultCard';
 import CompressionSettings from './components/CompressionOptions';
