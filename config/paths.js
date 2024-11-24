@@ -54,7 +54,7 @@ const toolEntries = {
   qrGenerator: resolveModule(resolveApp, 'src/tools/QRGenerator/entry'),
   jsonFormatter: resolveModule(resolveApp, 'src/tools/JSONFormatter/entry'),
   colorPalette: resolveModule(resolveApp, 'src/tools/ColorPalette/entry'),
-  'image-compressor': resolveApp('src/tools/ImageCompressor/entry.tsx'),
+  imageCompressor: resolveModule(resolveApp, 'src/tools/ImageCompressor/entry'),
 };
 
 // config after eject: we're in ./config/

@@ -5,8 +5,11 @@ import SearchBar from './components/SearchBar';
 import TagFilter from './components/TagFilter';
 import ToolGrid from './components/ToolGrid';
 import { useTools } from './hooks/useTools';
+import { useTitle } from '../../hooks/useTitle';
 
 const HomePage: FC = () => {
+  useTitle();
+
   const {
     searchTerm,
     setSearchTerm,

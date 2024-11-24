@@ -186,6 +186,15 @@ module.exports = function (webpackEnv) {
     return loaders;
   };
 
+  const toolEntryPoints = {};
+  Object.keys(paths.toolEntries).forEach(name => {
+    toolEntryPoints[name] = [
+      paths.toolEntries[name],
+    ].filter(Boolean);
+  });
+
+  console.log(toolEntryPoints);
+
   return {
     target: ['browserslist'],
     // Webpack noise constrained to errors and warnings
@@ -202,9 +211,7 @@ module.exports = function (webpackEnv) {
     // This means they will be the "root" imports that are included in JS bundle.
     entry: {
       main: paths.appIndexJs,
-      qrGenerator: paths.toolEntries.qrGenerator,
-      jsonFormatter: paths.toolEntries.jsonFormatter,
-      colorPalette: paths.toolEntries.colorPalette,
+      ...toolEntryPoints,
     },
     output: {
       // The build folder.
