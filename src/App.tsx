@@ -5,7 +5,7 @@ import HomePage from './pages/HomePage';
 import QRGenerator from './tools/QRGenerator';
 import JSONFormatter from './tools/JSONFormatter';
 import ColorPalette from './tools/ColorPalette';
-
+import ImageCompressor from './tools/ImageCompressor';
 const App: FC = () => {
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
@@ -14,6 +14,7 @@ const App: FC = () => {
         <Route path="/tools/qr-generator" element={<QRGenerator />} />
         <Route path="/tools/json-formatter" element={<JSONFormatter />} />
         <Route path="/tools/color-palette" element={<ColorPalette />} />
+        <Route path="/tools/image-compressor" element={<ImageCompressor />} />
       </Routes>
     </Box>
   );

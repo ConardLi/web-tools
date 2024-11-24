@@ -50,6 +50,13 @@ const resolveModule = (resolveFn, filePath) => {
   return resolveFn(`${filePath}.js`);
 };
 
+const toolEntries = {
+  qrGenerator: resolveModule(resolveApp, 'src/tools/QRGenerator/entry'),
+  jsonFormatter: resolveModule(resolveApp, 'src/tools/JSONFormatter/entry'),
+  colorPalette: resolveModule(resolveApp, 'src/tools/ColorPalette/entry'),
+  'image-compressor': resolveApp('src/tools/ImageCompressor/entry.tsx'),
+};
+
 // config after eject: we're in ./config/
 module.exports = {
   dotenv: resolveApp('.env'),
@@ -70,11 +77,7 @@ module.exports = {
   appTsBuildInfoFile: resolveApp('node_modules/.cache/tsconfig.tsbuildinfo'),
   swSrc: resolveModule(resolveApp, 'src/service-worker'),
   publicUrlOrPath,
-  toolEntries: {
-    qrGenerator: resolveModule(resolveApp, 'src/tools/QRGenerator/entry'),
-    jsonFormatter: resolveModule(resolveApp, 'src/tools/JSONFormatter/entry'),
-    colorPalette: resolveModule(resolveApp, 'src/tools/ColorPalette/entry'),
-  },
+  toolEntries,
   toolHtmlTemplate: resolveApp('public/tool.html'),
 };
 

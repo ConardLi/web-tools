@@ -44,6 +44,13 @@ export const TOOLS: Tool[] = [
     description: '颜色选择和转换工具',
     icon: 'Palette',
     tags: ['设计工具']
+  },
+  {
+    id: 'image-compressor',
+    name: '图片压缩',
+    description: '在线压缩图片，支持批量处理',
+    icon: 'Image',
+    tags: ['图片工具']
   }
 ]; 
 
