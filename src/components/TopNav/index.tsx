@@ -11,7 +11,6 @@ import {
   Typography,
   alpha
 } from '@mui/material';
-import { motion } from 'framer-motion';
 import SearchIcon from '@mui/icons-material/Search';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { styled } from '@mui/material/styles';
@@ -26,8 +25,8 @@ const Search = styled('div')(({ theme }) => ({
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  width: '100%',
-  maxWidth: '400px',
+  width: '300px',
+  maxWidth: 400,
   marginRight: theme.spacing(1),
 }));
 
