@@ -8,6 +8,7 @@ import ColorPalette from './tools/ColorPalette';
 import ImageCompressor from './tools/ImageCompressor';
 import ImageConverter from './tools/ImageConverter';
 import FaviconGenerator from './tools/FaviconGenerator';
+import MD5Generator from './tools/MD5Generator';
 
 const App: FC = () => {
   return (
@@ -20,6 +21,7 @@ const App: FC = () => {
         <Route path="/tools/image-compressor" element={<ImageCompressor />} />
         <Route path="/tools/image-converter" element={<ImageConverter />} />
         <Route path="/tools/favicon-generator" element={<FaviconGenerator />} />
+        <Route path="/tools/md5" element={<MD5Generator />} />
       </Routes>
     </Box>
   );

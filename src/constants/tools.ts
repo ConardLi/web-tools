@@ -33,7 +33,7 @@ export const TOOLS: Tool[] = [
   },
   {
     id: 'json-formatter',
-    name: 'JSON格式化',
+    name: 'JSON 格式化',
     description: 'JSON数据格式化和验证',
     icon: 'Code',
     tags: ['开发工具']
@@ -65,6 +65,13 @@ export const TOOLS: Tool[] = [
     description: '生成网站图标（favicon）',
     icon: 'Image',
     tags: ['图片工具']
+  },
+  {
+    id: 'md5',
+    name: 'MD5 生成器',
+    description: '快速生成文本的 MD5 哈希值',
+    icon: 'Code',
+    tags: ['开发工具']
   }
 ]; 
 

@@ -57,6 +57,7 @@ const toolEntries = {
   imageCompressor: resolveModule(resolveApp, 'src/tools/ImageCompressor/entry'),
   imageConverter: resolveModule(resolveApp, 'src/tools/ImageConverter/entry'),
   faviconGenerator: resolveModule(resolveApp, 'src/tools/FaviconGenerator/entry'),
+  md5: resolveModule(resolveApp, 'src/tools/MD5Generator/entry'),
 };
 
 // config after eject: we're in ./config/
