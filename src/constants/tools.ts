@@ -72,6 +72,13 @@ export const TOOLS: Tool[] = [
     description: '快速生成文本的 MD5 哈希值',
     icon: 'Code',
     tags: ['开发工具']
+  },
+  {
+    id: 'timestamp-converter',
+    name: '时间戳转换',
+    description: 'Unix时间戳与日期时间互转工具',
+    icon: 'AccessTime',
+    tags: ['开发工具']
   }
 ]; 
 

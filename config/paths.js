@@ -58,6 +58,7 @@ const toolEntries = {
   imageConverter: resolveModule(resolveApp, 'src/tools/ImageConverter/entry'),
   faviconGenerator: resolveModule(resolveApp, 'src/tools/FaviconGenerator/entry'),
   md5: resolveModule(resolveApp, 'src/tools/MD5Generator/entry'),
+  timestampConverter: resolveModule(resolveApp, 'src/tools/TimestampConverter/entry'),
 };
 
 // config after eject: we're in ./config/

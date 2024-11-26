@@ -9,6 +9,7 @@ import ImageCompressor from './tools/ImageCompressor';
 import ImageConverter from './tools/ImageConverter';
 import FaviconGenerator from './tools/FaviconGenerator';
 import MD5Generator from './tools/MD5Generator';
+import TimestampConverter from './tools/TimestampConverter';
 
 const App: FC = () => {
   return (
@@ -22,6 +23,7 @@ const App: FC = () => {
         <Route path="/tools/image-converter" element={<ImageConverter />} />
         <Route path="/tools/favicon-generator" element={<FaviconGenerator />} />
         <Route path="/tools/md5" element={<MD5Generator />} />
+        <Route path="/tools/timestamp-converter" element={<TimestampConverter />} />
       </Routes>
     </Box>
   );
