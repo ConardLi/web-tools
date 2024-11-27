@@ -26,14 +26,14 @@ export const TAGS: TagType[] = [
 export const TOOLS: Tool[] = [
   {
     id: 'qr-generator',
-    name: '二维码生成器',
+    name: '二维码生成',
     description: '快速生成自定义二维码',
     icon: 'QrCode',
     tags: ['图片工具']
   },
   {
     id: 'json-formatter',
-    name: 'JSON 格式化',
+    name: 'JSON格式化',
     description: 'JSON数据格式化和验证',
     icon: 'Code',
     tags: ['开发工具']
@@ -61,14 +61,14 @@ export const TOOLS: Tool[] = [
   },
   {
     id: 'favicon-generator',
-    name: '图标生成器',
+    name: '图标生成',
     description: '生成网站图标（favicon）',
     icon: 'Image',
     tags: ['图片工具']
   },
   {
     id: 'md5',
-    name: 'MD5 生成器',
+    name: 'MD5生成',
     description: '快速生成文本的 MD5 哈希值',
     icon: 'Code',
     tags: ['开发工具']
