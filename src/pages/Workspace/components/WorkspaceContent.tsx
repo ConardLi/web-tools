@@ -1,46 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Typography, SelectChangeEvent } from '@mui/material';
-import WorkspaceSearch from './WorkspaceSearch';
+import { Box, Typography } from '@mui/material';
 import WorkspaceTools from './WorkspaceTools';
 import WorkspaceWebsites from './WorkspaceWebsites';
+import WorkspaceHome from './WorkspaceHome';
+import WorkspaceAI from './WorkspaceAI';
 import { formatDate } from '../../../utils/date';
 import { getStoredSearchEngine } from '../../../utils/storage';
+import WorkspaceSearch from './WorkspaceSearch';
+
+interface WorkspaceContentProps {
+  activeTab: string;
+}
 
 const Container = styled(Box)(({ theme }) => ({
   flex: 1,
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  padding: theme.spacing(2),
-  gap: theme.spacing(3),
-  overflowY: 'auto',
-}));
-
-const TimeSection = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
+  padding: theme.spacing(4, 2),
   color: 'white',
-  marginTop: theme.spacing(4),
+  overflowY: 'auto',
+  '&::-webkit-scrollbar': {
+    width: '8px',
+  },
+  '&::-webkit-scrollbar-track': {
+    background: 'rgba(255, 255, 255, 0.1)',
+  },
+  '&::-webkit-scrollbar-thumb': {
+    background: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: '4px',
+  },
 }));
 
 const TimeText = styled(Typography)(({ theme }) => ({
-  fontSize: '5rem',
-  fontWeight: 600,
-  lineHeight: 1,
-  letterSpacing: '0.02em',
-  textShadow: '0 2px 4px rgba(0,0,0,0.2)',
+  fontSize: '3rem',
+  fontWeight: 300,
+  letterSpacing: '0.1em',
+  textShadow: '0 2px 4px rgba(0,0,0,0.3)',
 }));
 
 const DateText = styled(Typography)(({ theme }) => ({
-  fontSize: '1.1rem',
+  fontSize: '1rem',
   opacity: 0.9,
   marginTop: theme.spacing(0.5),
   textShadow: '0 1px 2px rgba(0,0,0,0.2)',
 }));
 
-const WorkspaceContent: React.FC = () => {
+const WorkspaceContent: React.FC<WorkspaceContentProps> = ({ activeTab }) => {
   const [time, setTime] = useState(new Date());
   const [searchEngine, setSearchEngine] = useState(() => getStoredSearchEngine() || 'google');
 
@@ -48,7 +55,10 @@ const WorkspaceContent: React.FC = () => {
     const timer = setInterval(() => {
       setTime(new Date());
     }, 1000);
-    return () => clearInterval(timer);
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   const handleSearchEngineChange = (engine: string) => {
@@ -57,18 +67,19 @@ const WorkspaceContent: React.FC = () => {
 
   return (
     <Container>
-      <TimeSection>
-        <TimeText>{time.toLocaleTimeString()}</TimeText>
-        <DateText>{formatDate(time)}</DateText>
-      </TimeSection>
+      <TimeText>{time.toLocaleTimeString('en-US', { hour12: false })}</TimeText>
+      <DateText>{formatDate(time)}</DateText>
       
       <WorkspaceSearch
         onSearchEngineChange={handleSearchEngineChange}
       />
 
-      <WorkspaceTools />
-      
-      <WorkspaceWebsites />
+      <Box sx={{ width: '100%', mt: 4 }}>
+        {activeTab === 'home' && <WorkspaceHome />}
+        {activeTab === 'tools' && <WorkspaceTools />}
+        {activeTab === 'websites' && <WorkspaceWebsites />}
+        {activeTab === 'ai' && <WorkspaceAI />}
+      </Box>
     </Container>
   );
 };

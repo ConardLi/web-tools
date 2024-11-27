@@ -44,13 +44,20 @@ const ContentWrapper = styled(Box)({
 });
 
 const Workspace: React.FC = () => {
+  const [activeTab, setActiveTab] = React.useState('home');
+
   return (
     <WorkspaceContainer>
       <BackgroundImage />
       <BackgroundOverlay />
       <ContentWrapper>
-        <WorkspaceNav />
-        <WorkspaceContent />
+        <WorkspaceNav
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+        <WorkspaceContent
+          activeTab={activeTab}
+        />
       </ContentWrapper>
     </WorkspaceContainer>
   );

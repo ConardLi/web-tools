@@ -1,18 +1,11 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { 
-  Box, 
-  Typography, 
-  Grid,
-  Card,
-  CardActionArea,
-  Tooltip,
-  tooltipClasses,
-  TooltipProps,
-} from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import * as MuiIcons from '@mui/icons-material';
-import { TOOLS } from '../../../constants/tools';
+import { Box, Typography, Grid } from '@mui/material';
+import ItemCard from '../../../components/common/ItemCard';
+import TagFilter from '../../../components/common/TagFilter';
+import { TOOLS, TAGS, TAG_TO_ICON } from '../../../constants/tools';
+import { getFavoriteTools, toggleFavoriteTool } from '../../../utils/storage';
+import { TagType } from '../../../types/tool';
 
 const ContentSection = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -28,66 +21,14 @@ const SectionTitle = styled(Typography)(({ theme }) => ({
   paddingLeft: theme.spacing(1),
 }));
 
-const ToolCard = styled(Card)(({ theme }) => ({
-  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  backdropFilter: 'blur(10px)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
-  transition: 'all 0.2s ease',
-  cursor: 'pointer',
-  borderRadius: theme.shape.borderRadius * 1.5,
-
-  '& .MuiCardActionArea-root': {
-    padding: theme.spacing(1.2),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-  },
-
-  '& .icon': {
-    color: 'white',
-    fontSize: '1.8rem',
-    height: '1.8rem',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  '& .tool-name': {
-    color: 'white',
-    fontSize: '0.75rem',
-    fontWeight: 400,
-    textAlign: 'center',
-    lineHeight: 1.2,
-    opacity: 0.9,
-    width: '100%',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-
-  '&:hover': {
-    transform: 'translateY(-4px)',
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    '& .tool-name': {
-      opacity: 1,
-    }
-  },
-}));
-
-const StyledTooltip = styled((props: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: props.className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    backdropFilter: 'blur(8px)',
-    fontSize: '0.75rem',
-    padding: theme.spacing(0.5, 1),
-    borderRadius: theme.shape.borderRadius,
-  },
-}));
-
 const WorkspaceTools: React.FC = () => {
+  const [selectedTags, setSelectedTags] = React.useState<TagType[]>([]);
+  const [favoriteTools, setFavoriteTools] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    setFavoriteTools(getFavoriteTools());
+  }, []);
+
   const handleToolClick = (toolId: string) => {
     window.open(`/tools/${toolId}`, '_blank');
   };
@@ -97,40 +38,54 @@ const WorkspaceTools: React.FC = () => {
     console.log('Add tool clicked');
   };
 
+  const handleFavoriteToggle = (toolId: string) => {
+    const newFavorites = toggleFavoriteTool(toolId);
+    setFavoriteTools(newFavorites);
+  };
+
+  const filteredTools = React.useMemo(() => {
+    if (selectedTags.length === 0) {
+      return TOOLS;
+    }
+    return TOOLS.filter(tool => 
+      selectedTags.every(tag => tool.tags.includes(tag as TagType))
+    );
+  }, [selectedTags]);
+
   return (
     <ContentSection>
-      <SectionTitle>工具</SectionTitle>
-      <Grid container spacing={1.5}>
-        {TOOLS.map((tool) => {
-          const Icon = (MuiIcons as any)[tool.icon];
-          return (
-            <Grid item xs={3} sm={2} md={1.5} lg={1} key={tool.id}>
-              <StyledTooltip title={tool.name} placement="top" arrow>
-                <ToolCard onClick={() => handleToolClick(tool.id)}>
-                  <CardActionArea>
-                    <Box className="icon">
-                      {Icon && <Icon sx={{ fontSize: 'inherit' }} />}
-                    </Box>
-                    <Typography className="tool-name">
-                      {tool.name}
-                    </Typography>
-                  </CardActionArea>
-                </ToolCard>
-              </StyledTooltip>
-            </Grid>
-          );
-        })}
-        <Grid item xs={3} sm={2} md={1.5} lg={1}>
-          <ToolCard onClick={handleAddToolClick}>
-            <CardActionArea>
-              <Box className="icon">
-                <AddIcon sx={{ fontSize: 'inherit' }} />
-              </Box>
-              <Typography className="tool-name">
-                添加工具
-              </Typography>
-            </CardActionArea>
-          </ToolCard>
+      <TagFilter<TagType>
+        tags={TAGS}
+        selectedTags={selectedTags}
+        tagToIcon={TAG_TO_ICON}
+        onTagChange={setSelectedTags}
+      />
+      <Grid container spacing={2} sx={{ mt: 2 }}>
+        {filteredTools.map((tool) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={tool.id}>
+            <ItemCard
+              id={tool.id}
+              name={tool.name}
+              icon={tool.icon}
+              description={tool.description}
+              tags={tool.tags}
+              onClick={() => handleToolClick(tool.id)}
+              onFavoriteToggle={() => handleFavoriteToggle(tool.id)}
+              isFavorite={favoriteTools.includes(tool.id)}
+            />
+          </Grid>
+        ))}
+        <Grid item xs={12} sm={6} md={4} lg={3}>
+          <ItemCard
+            id="add-tool"
+            name="添加工具"
+            icon="AddCircleOutline"
+            description="添加一个新的工具"
+            tags={[]}
+            onClick={handleAddToolClick}
+            onFavoriteToggle={() => {}}
+            isFavorite={false}
+          />
         </Grid>
       </Grid>
     </ContentSection>

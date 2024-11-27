@@ -1,9 +1,10 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, List, ListItem, ListItemIcon, ListItemText, Tooltip } from '@mui/material';
+import { Box, List, ListItem, ListItemIcon, Tooltip } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import BuildIcon from '@mui/icons-material/Build';
 import LanguageIcon from '@mui/icons-material/Language';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
 
 const NavContainer = styled(Box)(({ theme }) => ({
   width: '50px',
@@ -57,28 +58,52 @@ const NavList = styled(List)(({ theme }) => ({
   },
 }));
 
-const WorkspaceNav: React.FC = () => {
+interface WorkspaceNavProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
+
+const WorkspaceNav: React.FC<WorkspaceNavProps> = ({ activeTab, onTabChange }) => {
   return (
     <NavContainer>
       <NavList>
         <Tooltip title="主页" placement="right" arrow>
-          <ListItem className="active">
+          <ListItem
+            className={activeTab === 'home' ? 'active' : ''}
+            onClick={() => onTabChange('home')}
+          >
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
           </ListItem>
         </Tooltip>
         <Tooltip title="工具" placement="right" arrow>
-          <ListItem>
+          <ListItem
+            className={activeTab === 'tools' ? 'active' : ''}
+            onClick={() => onTabChange('tools')}
+          >
             <ListItemIcon>
               <BuildIcon />
             </ListItemIcon>
           </ListItem>
         </Tooltip>
         <Tooltip title="网站" placement="right" arrow>
-          <ListItem>
+          <ListItem
+            className={activeTab === 'websites' ? 'active' : ''}
+            onClick={() => onTabChange('websites')}
+          >
             <ListItemIcon>
               <LanguageIcon />
+            </ListItemIcon>
+          </ListItem>
+        </Tooltip>
+        <Tooltip title="AI" placement="right" arrow>
+          <ListItem
+            className={activeTab === 'ai' ? 'active' : ''}
+            onClick={() => onTabChange('ai')}
+          >
+            <ListItemIcon>
+              <SmartToyIcon />
             </ListItemIcon>
           </ListItem>
         </Tooltip>
