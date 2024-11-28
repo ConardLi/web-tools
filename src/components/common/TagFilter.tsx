@@ -26,11 +26,11 @@ const TagFilter = <T extends string>({
 }: TagFilterProps<T>) => {
   const handleTagClick = (tag: T) => {
     if (selectedTags.includes(tag)) {
-      // 如果标签已经被选中，则移除它
-      onTagChange(selectedTags.filter(t => t !== tag));
+      // 如果标签已经被选中，则清空选择
+      onTagChange([]);
     } else {
-      // 如果标签未被选中，则添加它
-      onTagChange([...selectedTags, tag]);
+      // 如果标签未被选中，则只选中这一个标签
+      onTagChange([tag]);
     }
   };
 

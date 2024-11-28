@@ -34,17 +34,18 @@ const Container = styled(Box)(({ theme }) => ({
 }));
 
 const TimeText = styled(Typography)(({ theme }) => ({
-  fontSize: '3rem',
-  fontWeight: 300,
+  fontSize: '4rem',
+  fontWeight: 500,
   letterSpacing: '0.1em',
   textShadow: '0 2px 4px rgba(0,0,0,0.3)',
 }));
 
 const DateText = styled(Typography)(({ theme }) => ({
-  fontSize: '1rem',
+  fontSize: '1.1rem',
   opacity: 0.9,
   marginTop: theme.spacing(0.5),
   textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+  fontWeight: 400,
 }));
 
 const WorkspaceContent: React.FC<WorkspaceContentProps> = ({ activeTab }) => {
@@ -70,9 +71,13 @@ const WorkspaceContent: React.FC<WorkspaceContentProps> = ({ activeTab }) => {
       <TimeText>{time.toLocaleTimeString('en-US', { hour12: false })}</TimeText>
       <DateText>{formatDate(time)}</DateText>
       
-      <WorkspaceSearch
-        onSearchEngineChange={handleSearchEngineChange}
-      />
+      <Box sx={{ mt: 4, width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <Box sx={{ width: '100%', maxWidth: '600px' }}>
+          <WorkspaceSearch
+            onSearchEngineChange={handleSearchEngineChange}
+          />
+        </Box>
+      </Box>
 
       <Box sx={{ width: '100%', mt: 4 }}>
         {activeTab === 'home' && <WorkspaceHome />}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Typography, Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import ItemCard from '../../../components/common/ItemCard';
 import TagFilter from '../../../components/common/TagFilter';
 import { TOOLS, TAGS, TAG_TO_ICON } from '../../../constants/tools';
@@ -9,16 +9,8 @@ import { TagType } from '../../../types/tool';
 
 const ContentSection = styled(Box)(({ theme }) => ({
   width: '100%',
-  maxWidth: '1200px',
+  maxWidth: '1600px',
   padding: theme.spacing(0, 2),
-}));
-
-const SectionTitle = styled(Typography)(({ theme }) => ({
-  color: 'white',
-  fontSize: '1.1rem',
-  fontWeight: 500,
-  marginBottom: theme.spacing(2),
-  paddingLeft: theme.spacing(1),
 }));
 
 const WorkspaceTools: React.FC = () => {
@@ -31,11 +23,6 @@ const WorkspaceTools: React.FC = () => {
 
   const handleToolClick = (toolId: string) => {
     window.open(`/tools/${toolId}`, '_blank');
-  };
-
-  const handleAddToolClick = () => {
-    // TODO: 实现添加工具功能
-    console.log('Add tool clicked');
   };
 
   const handleFavoriteToggle = (toolId: string) => {
@@ -54,15 +41,17 @@ const WorkspaceTools: React.FC = () => {
 
   return (
     <ContentSection>
-      <TagFilter<TagType>
-        tags={TAGS}
-        selectedTags={selectedTags}
-        tagToIcon={TAG_TO_ICON}
-        onTagChange={setSelectedTags}
-      />
-      <Grid container spacing={2} sx={{ mt: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mb: 4 }}>
+        <TagFilter<TagType>
+          tags={TAGS}
+          selectedTags={selectedTags}
+          tagToIcon={TAG_TO_ICON}
+          onTagChange={setSelectedTags}
+        />
+      </Box>
+      <Grid container spacing={2}>
         {filteredTools.map((tool) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={tool.id}>
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={tool.id}>
             <ItemCard
               id={tool.id}
               name={tool.name}
@@ -75,18 +64,6 @@ const WorkspaceTools: React.FC = () => {
             />
           </Grid>
         ))}
-        <Grid item xs={12} sm={6} md={4} lg={3}>
-          <ItemCard
-            id="add-tool"
-            name="添加工具"
-            icon="AddCircleOutline"
-            description="添加一个新的工具"
-            tags={[]}
-            onClick={handleAddToolClick}
-            onFavoriteToggle={() => {}}
-            isFavorite={false}
-          />
-        </Grid>
       </Grid>
     </ContentSection>
   );
