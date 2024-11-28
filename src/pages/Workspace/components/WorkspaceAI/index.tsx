@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Typography, Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import ItemCard from '../../../../components/common/ItemCard';
 import TagFilter from '../../../../components/common/TagFilter';
 import { WEBSITES, WEBSITE_TAGS, TAG_TO_ICON } from '../../../../constants/websites';
@@ -11,14 +11,6 @@ const ContentSection = styled(Box)(({ theme }) => ({
   width: '100%',
   maxWidth: '1200px',
   padding: theme.spacing(0, 2),
-}));
-
-const SectionTitle = styled(Typography)(({ theme }) => ({
-  color: 'white',
-  fontSize: '1.1rem',
-  fontWeight: 500,
-  marginBottom: theme.spacing(2),
-  paddingLeft: theme.spacing(1),
 }));
 
 const WorkspaceAI: React.FC = () => {

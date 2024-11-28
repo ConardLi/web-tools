@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Chip, Card } from '@mui/material';
+import { Chip } from '@mui/material';
 import { motion } from 'framer-motion';
 
 export const StyledCard = styled(motion.div)(({ theme }) => ({

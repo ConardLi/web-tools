@@ -4,7 +4,7 @@ import { Box, Typography, Grid } from '@mui/material';
 import ToolCard from '../../../../components/common/ToolCard';
 import { TOOLS } from '../../../../constants/tools';
 import { WEBSITES } from '../../../../constants/websites';
-import { getFavoriteTools, getFavoriteWebsites, toggleFavoriteTool, toggleFavoriteWebsite } from '../../../../utils/storage';
+import { getFavoriteTools, getFavoriteWebsites } from '../../../../utils/storage';
 
 const ContentSection = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -32,16 +32,6 @@ const WorkspaceHome: React.FC = () => {
     setFavoriteTools(getFavoriteTools());
     setFavoriteWebsites(getFavoriteWebsites());
   }, []);
-
-  const handleToolFavoriteToggle = (toolId: string) => {
-    const newFavorites = toggleFavoriteTool(toolId);
-    setFavoriteTools(newFavorites);
-  };
-
-  const handleWebsiteFavoriteToggle = (websiteId: string) => {
-    const newFavorites = toggleFavoriteWebsite(websiteId);
-    setFavoriteWebsites(newFavorites);
-  };
 
   const handleToolClick = (toolId: string) => {
     window.open(`/tools/${toolId}`, '_blank');

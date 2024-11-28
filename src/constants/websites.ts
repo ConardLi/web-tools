@@ -1,5 +1,4 @@
 import { Website, WebsiteTagType } from '../types/website';
-import LanguageIcon from '@mui/icons-material/Language';
 import SearchIcon from '@mui/icons-material/Search';
 import PeopleIcon from '@mui/icons-material/People';
 import NewspaperIcon from '@mui/icons-material/Newspaper';

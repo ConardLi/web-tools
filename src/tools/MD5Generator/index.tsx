@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { Box } from '@mui/material';
 import MD5Editor from './components/MD5Editor';
 import { useMD5 } from './hooks/useMD5';
 import { StyledContainer } from './styles';

@@ -1,5 +1,4 @@
 import { styled, Paper, Box } from '@mui/material';
-import { Theme } from '@mui/material/styles';
 
 interface ColorPreviewProps {
   color: string;

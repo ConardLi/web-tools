@@ -8,7 +8,7 @@ interface ToolLayoutProps {
 }
 
 const ToolLayout: FC<ToolLayoutProps> = ({ children }) => {
-  const [isNavOpen, setIsNavOpen] = useState(true);
+  const [isNavOpen] = useState(true);
 
   return (
     <Box sx={{ display: 'flex' }}>
