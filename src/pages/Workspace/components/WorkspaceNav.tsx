@@ -8,13 +8,15 @@ import SmartToyIcon from '@mui/icons-material/SmartToy';
 
 const NavContainer = styled(Box)(({ theme }) => ({
   width: '50px',
-  height: '100%',
+  minHeight: '100vh',
   backgroundColor: 'rgba(255, 255, 255, 0.1)',
   backdropFilter: 'blur(20px)',
   WebkitBackdropFilter: 'blur(20px)',
   borderRight: '1px solid rgba(255, 255, 255, 0.2)',
   padding: theme.spacing(1),
   transition: 'all 0.3s ease',
+  position: 'sticky',
+  top: 0,
 }));
 
 const NavList = styled(List)(({ theme }) => ({

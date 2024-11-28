@@ -6,6 +6,7 @@ import TagFilter from '../../../components/common/TagFilter';
 import { TOOLS, TAGS, TAG_TO_ICON } from '../../../constants/tools';
 import { getFavoriteTools, toggleFavoriteTool } from '../../../utils/storage';
 import { TagType } from '../../../types/tool';
+import { useQueryParams } from '../../../hooks/useQueryParams';
 
 const ContentSection = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -13,13 +14,35 @@ const ContentSection = styled(Box)(({ theme }) => ({
   padding: theme.spacing(0, 2),
 }));
 
-const WorkspaceTools: React.FC = () => {
-  const [selectedTags, setSelectedTags] = React.useState<TagType[]>([]);
+interface WorkspaceToolsProps {
+  selectedTag?: string;
+  onTagChange?: (tag: string) => void;
+}
+
+const WorkspaceTools: React.FC<WorkspaceToolsProps> = ({
+  selectedTag: propSelectedTag,
+  onTagChange,
+}) => {
+  const { params, updateParams } = useQueryParams<{ toolTag: string }>({
+    toolTag: '',
+  });
+
+  const selectedTag = propSelectedTag || params.toolTag || '';
+
   const [favoriteTools, setFavoriteTools] = React.useState<string[]>([]);
 
   React.useEffect(() => {
     setFavoriteTools(getFavoriteTools());
   }, []);
+
+  const handleTagChange = (newTags: TagType[]) => {
+    const newTag = newTags.length > 0 ? newTags[0] : '';
+    if (onTagChange) {
+      onTagChange(newTag);
+    } else {
+      updateParams({ toolTag: newTag });
+    }
+  };
 
   const handleToolClick = (toolId: string) => {
     window.open(`/tools/${toolId}`, '_blank');
@@ -31,22 +54,29 @@ const WorkspaceTools: React.FC = () => {
   };
 
   const filteredTools = React.useMemo(() => {
-    if (selectedTags.length === 0) {
+    if (!selectedTag) {
       return TOOLS;
     }
-    return TOOLS.filter(tool => 
-      selectedTags.every(tag => tool.tags.includes(tag as TagType))
-    );
-  }, [selectedTags]);
+    return TOOLS.filter(tool => tool.tags.includes(selectedTag as TagType));
+  }, [selectedTag]);
 
   return (
     <ContentSection>
-      <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mb: 4 }}>
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        width: '100%', 
+        mb: 4,
+        px: { xs: 2, sm: 4, md: 6 }, 
+        maxWidth: '100%',
+        overflow: 'auto',
+      }}>
         <TagFilter<TagType>
           tags={TAGS}
-          selectedTags={selectedTags}
+          selectedTags={selectedTag ? [selectedTag as TagType] : []}
           tagToIcon={TAG_TO_ICON}
-          onTagChange={setSelectedTags}
+          onTagChange={handleTagChange}
+          singleSelect
         />
       </Box>
       <Grid container spacing={2}>

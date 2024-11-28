@@ -1,73 +1,83 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Grid } from '@mui/material';
-import ItemCard from '../../../../components/common/ItemCard';
+import AICard from '../../../../components/common/AICard';
 import TagFilter from '../../../../components/common/TagFilter';
-import { WEBSITES, WEBSITE_TAGS, TAG_TO_ICON } from '../../../../constants/websites';
-import { getFavoriteWebsites, toggleFavoriteWebsite } from '../../../../utils/storage';
-import { WebsiteTagType } from '../../../../types/website';
+import { AI_WEBSITES_WITH_DUPLICATES, AI_WEBSITES_UNIQUE, AI_TAGS, TAG_TO_ICON } from '../../../../constants/ai';
+import { getFavoriteAIWebsites, toggleFavoriteAIWebsite } from '../../../../utils/storage';
+import { AITagType } from '../../../../types/ai';
 
 const ContentSection = styled(Box)(({ theme }) => ({
   width: '100%',
-  maxWidth: '1200px',
+  maxWidth: '1600px',
   padding: theme.spacing(0, 2),
 }));
 
-const WorkspaceAI: React.FC = () => {
-  const [selectedTags, setSelectedTags] = React.useState<WebsiteTagType[]>([]);
+interface WorkspaceAIProps {
+  activeTag?: string;
+  onTagChange: (tag: string) => void;
+}
+
+const WorkspaceAI: React.FC<WorkspaceAIProps> = ({
+  activeTag = '写作工具',
+  onTagChange,
+}) => {
   const [favoriteWebsites, setFavoriteWebsites] = React.useState<string[]>([]);
 
   React.useEffect(() => {
-    setFavoriteWebsites(getFavoriteWebsites());
+    setFavoriteWebsites(getFavoriteAIWebsites());
   }, []);
 
   const handleWebsiteClick = (url: string) => {
     window.open(url, '_blank');
   };
 
-  const handleFavoriteToggle = (websiteId: string) => {
-    const newFavorites = toggleFavoriteWebsite(websiteId);
+  const handleFavoriteToggle = (websiteTitle: string) => {
+    const newFavorites = toggleFavoriteAIWebsite(websiteTitle);
     setFavoriteWebsites(newFavorites);
   };
 
-  // 首先过滤出 AI 工具
-  const aiWebsites = WEBSITES.filter(website => website.tags.includes('AI工具' as WebsiteTagType));
+  const handleTagChange = (newTags: AITagType[]) => {
+    const newTag = newTags.length > 0 ? newTags[0] : '写作工具';
+    onTagChange(newTag);
+  };
 
-  // 获取 AI 相关的标签
-  const aiTags = WEBSITE_TAGS.filter(tag => {
-    return aiWebsites.some(website => website.tags.includes(tag));
-  });
-
-  // 根据选中的标签进一步过滤
   const filteredWebsites = React.useMemo(() => {
-    if (selectedTags.length === 0) {
-      return aiWebsites;
+    if (activeTag === '全部') {
+      return AI_WEBSITES_UNIQUE;
     }
-    return aiWebsites.filter(website => 
-      selectedTags.every(tag => website.tags.includes(tag as WebsiteTagType))
+    return AI_WEBSITES_WITH_DUPLICATES.filter(website => 
+      website.tags?.includes(activeTag as AITagType)
     );
-  }, [selectedTags, aiWebsites]);
+  }, [activeTag]);
 
   return (
     <ContentSection>
-      <TagFilter<WebsiteTagType>
-        tags={aiTags}
-        selectedTags={selectedTags}
-        tagToIcon={TAG_TO_ICON}
-        onTagChange={setSelectedTags}
-      />
-      <Grid container spacing={2} sx={{ mt: 2 }}>
-        {filteredWebsites.map((website) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={website.id}>
-            <ItemCard
-              id={website.id}
-              name={website.name}
-              icon={website.icon}
-              description={website.description}
-              tags={website.tags}
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        width: '100%', 
+        mb: 4,
+        px: { xs: 2, sm: 4, md: 6 }, 
+        maxWidth: '100%',
+        overflow: 'auto',
+      }}>
+        <TagFilter<AITagType>
+          tags={AI_TAGS}
+          selectedTags={[activeTag as AITagType]}
+          tagToIcon={TAG_TO_ICON}
+          onTagChange={handleTagChange}
+          singleSelect
+        />
+      </Box>
+      <Grid container spacing={2}>
+        {filteredWebsites.map((website, index) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={`${website.title}-${index}`}>
+            <AICard
+              website={website}
               onClick={() => handleWebsiteClick(website.url)}
-              onFavoriteToggle={() => handleFavoriteToggle(website.id)}
-              isFavorite={favoriteWebsites.includes(website.id)}
+              onFavoriteToggle={() => handleFavoriteToggle(website.title)}
+              isFavorite={favoriteWebsites.includes(website.title)}
             />
           </Grid>
         ))}

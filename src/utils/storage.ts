@@ -2,6 +2,7 @@ const STORAGE_KEYS = {
   SEARCH_ENGINE: 'preferred_search_engine',
   FAVORITE_TOOLS: 'favorite_tools',
   FAVORITE_WEBSITES: 'favorite_websites',
+  FAVORITE_AI_WEBSITES: 'favorite_ai_websites',
 } as const;
 
 export const getStoredSearchEngine = (): string | null => {
@@ -17,6 +18,9 @@ const DEFAULT_FAVORITE_TOOLS = ['json-formatter', 'color-palette', 'image-conver
 
 // 默认收藏的网站
 const DEFAULT_FAVORITE_WEBSITES = ['google', 'github', 'chatgpt'];
+
+// 默认收藏的 AI 网站
+const DEFAULT_FAVORITE_AI_WEBSITES: string[] = [];
 
 // 工具收藏相关函数
 export const getFavoriteTools = (): string[] => {
@@ -82,4 +86,37 @@ export const toggleFavoriteWebsite = (websiteId: string): string[] => {
 export const isFavoriteWebsite = (websiteId: string): boolean => {
   const favorites = getFavoriteWebsites();
   return favorites.includes(websiteId);
+};
+
+// AI 网站收藏相关函数
+export const getFavoriteAIWebsites = (): string[] => {
+  const stored = localStorage.getItem(STORAGE_KEYS.FAVORITE_AI_WEBSITES);
+  if (!stored) {
+    setFavoriteAIWebsites(DEFAULT_FAVORITE_AI_WEBSITES);
+    return DEFAULT_FAVORITE_AI_WEBSITES;
+  }
+  return JSON.parse(stored);
+};
+
+export const setFavoriteAIWebsites = (websites: string[]): void => {
+  localStorage.setItem(STORAGE_KEYS.FAVORITE_AI_WEBSITES, JSON.stringify(websites));
+};
+
+export const toggleFavoriteAIWebsite = (websiteTitle: string): string[] => {
+  const favorites = getFavoriteAIWebsites();
+  const index = favorites.indexOf(websiteTitle);
+  
+  if (index === -1) {
+    favorites.push(websiteTitle);
+  } else {
+    favorites.splice(index, 1);
+  }
+  
+  setFavoriteAIWebsites(favorites);
+  return favorites;
+};
+
+export const isFavoriteAIWebsite = (websiteTitle: string): boolean => {
+  const favorites = getFavoriteAIWebsites();
+  return favorites.includes(websiteTitle);
 };

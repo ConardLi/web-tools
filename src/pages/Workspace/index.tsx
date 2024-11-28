@@ -3,17 +3,17 @@ import { styled } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import WorkspaceNav from './components/WorkspaceNav';
 import WorkspaceContent from './components/WorkspaceContent';
+import { useQueryParams } from '../../hooks/useQueryParams';
 
 const WorkspaceContainer = styled(Box)({
   width: '100vw',
-  height: '100vh',
+  minHeight: '100vh',
   position: 'relative',
-  overflow: 'hidden',
   backgroundColor: '#1a1a1a',
 });
 
 const BackgroundImage = styled(Box)({
-  position: 'absolute',
+  position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
@@ -26,7 +26,7 @@ const BackgroundImage = styled(Box)({
 });
 
 const BackgroundOverlay = styled(Box)({
-  position: 'absolute',
+  position: 'fixed',
   top: 0,
   left: 0,
   right: 0,
@@ -39,12 +39,34 @@ const ContentWrapper = styled(Box)({
   position: 'relative',
   display: 'flex',
   width: '100%',
-  height: '100%',
+  minHeight: '100vh',
   zIndex: 2,
 });
 
+type QueryParams = Record<'tab' | 'tag' | 'toolTag', string>;
+
 const Workspace: React.FC = () => {
-  const [activeTab, setActiveTab] = React.useState('home');
+  const { params, updateParams } = useQueryParams<QueryParams>({
+    tab: 'home',
+    tag: '写作工具',
+    toolTag: '',
+  });
+
+  const handleTabChange = (newTab: string) => {
+    if (newTab === params.tab) return;
+    updateParams({ tab: newTab });
+  };
+
+  const handleTagChange = (newTag: string) => {
+    if (newTag === params.tag) return;
+    updateParams({ tag: newTag });
+  };
+
+  const handleToolTagChange = (newTags: string[]) => {
+    const newTag = newTags[0] || '';
+    if (newTag === params.toolTag) return;
+    updateParams({ toolTag: newTag });
+  };
 
   return (
     <WorkspaceContainer>
@@ -52,11 +74,15 @@ const Workspace: React.FC = () => {
       <BackgroundOverlay />
       <ContentWrapper>
         <WorkspaceNav
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
+          activeTab={params.tab}
+          onTabChange={handleTabChange}
         />
         <WorkspaceContent
-          activeTab={activeTab}
+          activeTab={params.tab}
+          activeTag={params.tag}
+          onTagChange={handleTagChange}
+          selectedToolTags={params.toolTag ? [params.toolTag] : []}
+          onToolTagsChange={handleToolTagChange}
         />
       </ContentWrapper>
     </WorkspaceContainer>

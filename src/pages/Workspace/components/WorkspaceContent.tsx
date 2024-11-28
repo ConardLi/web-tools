@@ -5,12 +5,16 @@ import WorkspaceTools from './WorkspaceTools';
 import WorkspaceWebsites from './WorkspaceWebsites';
 import WorkspaceHome from './WorkspaceHome';
 import WorkspaceAI from './WorkspaceAI';
+import WorkspaceSearch from './WorkspaceSearch';
 import { formatDate } from '../../../utils/date';
 import { getStoredSearchEngine } from '../../../utils/storage';
-import WorkspaceSearch from './WorkspaceSearch';
 
 interface WorkspaceContentProps {
   activeTab: string;
+  activeTag?: string;
+  onTagChange: (tag: string) => void;
+  selectedToolTags?: string[];
+  onToolTagsChange?: (tags: string[]) => void;
 }
 
 const Container = styled(Box)(({ theme }) => ({
@@ -19,71 +23,124 @@ const Container = styled(Box)(({ theme }) => ({
   flexDirection: 'column',
   alignItems: 'center',
   padding: theme.spacing(4, 2),
-  color: 'white',
   overflowY: 'auto',
-  '&::-webkit-scrollbar': {
-    width: '8px',
-  },
-  '&::-webkit-scrollbar-track': {
-    background: 'rgba(255, 255, 255, 0.1)',
-  },
-  '&::-webkit-scrollbar-thumb': {
-    background: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: '4px',
-  },
+  height: '100vh',
 }));
 
 const TimeText = styled(Typography)(({ theme }) => ({
-  fontSize: '4rem',
-  fontWeight: 500,
-  letterSpacing: '0.1em',
-  textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+  fontSize: '5rem',
+  color: 'rgba(255, 255, 255, 0.9)',
+  fontWeight: 300,
+  textAlign: 'center',
+  marginBottom: theme.spacing(1),
 }));
 
 const DateText = styled(Typography)(({ theme }) => ({
-  fontSize: '1.1rem',
-  opacity: 0.9,
-  marginTop: theme.spacing(0.5),
-  textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+  fontSize: '1.2rem',
+  color: 'rgba(255, 255, 255, 0.7)',
+  marginBottom: theme.spacing(4),
+  textAlign: 'center',
   fontWeight: 400,
 }));
 
-const WorkspaceContent: React.FC<WorkspaceContentProps> = ({ activeTab }) => {
-  const [time, setTime] = useState(new Date());
+const ModuleTitle = styled(Typography)(({ theme }) => ({
+  fontSize: '3rem',
+  color: 'rgba(255, 255, 255, 0.9)',
+  fontWeight: 300,
+  textAlign: 'center',
+  marginBottom: theme.spacing(4),
+}));
+
+const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
+  activeTab,
+  activeTag,
+  onTagChange,
+  selectedToolTags,
+  onToolTagsChange,
+}) => {
+  const [currentTime, setCurrentTime] = useState(new Date());
   const [searchEngine, setSearchEngine] = useState(() => getStoredSearchEngine() || 'google');
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTime(new Date());
+      setCurrentTime(new Date());
     }, 1000);
 
-    return () => {
-      clearInterval(timer);
-    };
+    return () => clearInterval(timer);
   }, []);
 
   const handleSearchEngineChange = (engine: string) => {
     setSearchEngine(engine);
   };
 
+  const renderTitle = () => {
+    switch (activeTab) {
+      case 'ai':
+        return (
+          <ModuleTitle>
+            AI 工具箱
+          </ModuleTitle>
+        );
+      case 'tools':
+        return (
+          <ModuleTitle>
+            Web 工具箱
+          </ModuleTitle>
+        );
+      case 'websites':
+        return (
+          <ModuleTitle>
+            常用网站导航
+          </ModuleTitle>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderTime = () => {
+    if (activeTab === 'home') {
+      return (
+        <>
+          <TimeText>
+            {currentTime.toLocaleTimeString('en-US', { hour12: false })}
+          </TimeText>
+          <DateText>
+            {formatDate(currentTime)}
+          </DateText>
+        </>
+      );
+    }
+    return null;
+  };
+
   return (
     <Container>
-      <TimeText>{time.toLocaleTimeString('en-US', { hour12: false })}</TimeText>
-      <DateText>{formatDate(time)}</DateText>
-      
-      <Box sx={{ mt: 4, width: '100%', display: 'flex', justifyContent: 'center' }}>
-        <Box sx={{ width: '100%', maxWidth: '600px' }}>
-          <WorkspaceSearch
-            onSearchEngineChange={handleSearchEngineChange}
-          />
-        </Box>
+      {renderTime()}
+      {renderTitle()}
+      <Box sx={{ width: '100%', maxWidth: '600px', mb: 4 }}>
+        <WorkspaceSearch onSearchEngineChange={handleSearchEngineChange} />
       </Box>
-
-      <Box sx={{ width: '100%', mt: 4 }}>
+      
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: '1600px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 4,
+        }}
+      >
         {activeTab === 'home' && <WorkspaceHome />}
-        {activeTab === 'tools' && <WorkspaceTools />}
+        {activeTab === 'tools' && (
+          <WorkspaceTools
+            selectedTag={selectedToolTags?.[0] || ''}
+            onTagChange={tag => onToolTagsChange?.([tag])}
+          />
+        )}
         {activeTab === 'websites' && <WorkspaceWebsites />}
-        {activeTab === 'ai' && <WorkspaceAI />}
+        {activeTab === 'ai' && <WorkspaceAI activeTag={activeTag} onTagChange={onTagChange} />}
       </Box>
     </Container>
   );

@@ -16,6 +16,7 @@ interface TagFilterProps<T extends string> {
   selectedTags: T[];
   tagToIcon?: { [key: string]: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string } };
   onTagChange: (tags: T[]) => void;
+  singleSelect?: boolean;
 }
 
 const TagFilter = <T extends string>({
@@ -23,14 +24,16 @@ const TagFilter = <T extends string>({
   selectedTags,
   tagToIcon,
   onTagChange,
+  singleSelect = false,
 }: TagFilterProps<T>) => {
   const handleTagClick = (tag: T) => {
     if (selectedTags.includes(tag)) {
-      // 如果标签已经被选中，则清空选择
-      onTagChange([]);
+      // 如果标签已经被选中，则取消选中
+      onTagChange(selectedTags.filter(t => t !== tag));
     } else {
-      // 如果标签未被选中，则只选中这一个标签
-      onTagChange([tag]);
+      // 如果是单选模式，直接替换选中的标签
+      // 如果是多选模式，添加到已选中的标签列表中
+      onTagChange(singleSelect ? [tag] : [...selectedTags, tag]);
     }
   };
 
@@ -47,17 +50,19 @@ const TagFilter = <T extends string>({
             color={selectedTags.includes(tag) ? 'primary' : 'default'}
             variant={selectedTags.includes(tag) ? 'filled' : 'outlined'}
             sx={{
-              backgroundColor: selectedTags.includes(tag)
-                ? 'primary.main'
-                : 'rgba(255, 255, 255, 0.1)',
-              '&:hover': {
-                backgroundColor: selectedTags.includes(tag)
-                  ? 'primary.dark'
-                  : 'rgba(255, 255, 255, 0.2)',
-              },
               color: 'white',
+              borderColor: 'rgba(255, 255, 255, 0.3)',
+              '&:hover': {
+                borderColor: 'rgba(255, 255, 255, 0.5)',
+              },
               '& .MuiChip-icon': {
                 color: 'inherit',
+              },
+              '&.MuiChip-colorPrimary': {
+                backgroundColor: 'rgba(25, 118, 210, 0.7)',
+                '&:hover': {
+                  backgroundColor: 'rgba(25, 118, 210, 0.8)',
+                },
               },
             }}
           />
