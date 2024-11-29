@@ -31,19 +31,25 @@ const WorkspaceAI: React.FC<WorkspaceAIProps> = React.memo(({
     setFavoriteWebsites(getFavoriteAIWebsites());
   }, []);
 
-  const handleWebsiteClick = (url: string) => {
+  const handleWebsiteClick = React.useCallback((url: string) => {
     window.open(url, '_blank');
-  };
+  }, []);
 
-  const handleFavoriteToggle = (websiteTitle: string) => {
-    const newFavorites = toggleFavoriteAIWebsite(websiteTitle);
-    setFavoriteWebsites(newFavorites);
-  };
+  const handleFavoriteToggle = React.useCallback((websiteTitle: string) => {
+    setFavoriteWebsites(prevFavorites => {
+      const newFavorites = toggleFavoriteAIWebsite(websiteTitle);
+      return newFavorites;
+    });
+  }, []);
 
-  const handleTagChange = (newTags: AITagType[]) => {
+  const isFavorite = React.useCallback((websiteTitle: string) => {
+    return favoriteWebsites.includes(websiteTitle);
+  }, [favoriteWebsites]);
+
+  const handleTagChange = React.useCallback((newTags: AITagType[]) => {
     const newTag = newTags.length > 0 ? newTags[0] : '写作工具';
     onTagChange(newTag);
-  };
+  }, [onTagChange]);
 
   const filteredWebsites = React.useMemo(() => {
     let websites = activeTag === '全部' ? AI_WEBSITES_UNIQUE : AI_WEBSITES_WITH_DUPLICATES.filter(website => 
@@ -60,6 +66,19 @@ const WorkspaceAI: React.FC<WorkspaceAIProps> = React.memo(({
 
     return websites;
   }, [activeTag, searchText]);
+
+  const renderItem = React.useCallback((website, style) => {
+    return (
+      <AICard
+        key={website.title}
+        website={website}
+        onClick={() => handleWebsiteClick(website.url)}
+        onFavoriteToggle={() => handleFavoriteToggle(website.title)}
+        isFavorite={isFavorite(website.title)}
+        style={style}
+      />
+    );
+  }, [handleWebsiteClick, handleFavoriteToggle, isFavorite]);
 
   return (
     <ContentSection>
@@ -85,15 +104,7 @@ const WorkspaceAI: React.FC<WorkspaceAIProps> = React.memo(({
         itemHeight={100}
         minItemWidth={300}
         gap={16}
-        renderItem={(website, style) => (
-          <AICard
-            website={website}
-            onClick={() => handleWebsiteClick(website.url)}
-            onFavoriteToggle={() => handleFavoriteToggle(website.title)}
-            isFavorite={favoriteWebsites.includes(website.title)}
-            style={style}
-          />
-        )}
+        renderItem={renderItem}
       />
     </ContentSection>
   );

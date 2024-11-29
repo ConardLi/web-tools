@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, memo } from 'react';
 import { FixedSizeGrid, GridChildComponentProps } from 'react-window';
 import { Box } from '@mui/material';
 import useWindowSize from '../../hooks/useWindowSize';
@@ -11,7 +11,7 @@ interface VirtualGridProps {
   minItemWidth?: number;
 }
 
-const VirtualGrid: React.FC<VirtualGridProps> = ({
+const VirtualGrid: React.FC<VirtualGridProps> = memo(({
   items,
   itemHeight,
   renderItem,
@@ -60,6 +60,6 @@ const VirtualGrid: React.FC<VirtualGridProps> = ({
       </FixedSizeGrid>
     </Box>
   );
-};
+});
 
 export default VirtualGrid;

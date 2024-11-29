@@ -64,9 +64,9 @@ const TimeDisplay = React.memo(() => {
   }, []);
 
   return (
-    <Typography variant="h4" component="div" sx={{ textAlign: 'center', color: 'white', fontSize: '3rem' }}>
+    <TimeText>
       {currentTime.toLocaleTimeString()}
-    </Typography>
+    </TimeText>
   );
 });
 

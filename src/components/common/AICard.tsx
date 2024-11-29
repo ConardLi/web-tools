@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { styled } from '@mui/material/styles';
 import { Card, CardContent, Typography, IconButton, Tooltip } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -89,6 +89,10 @@ const TooltipContent = styled('div')({
   },
 });
 
+const IconImage = React.memo(({ src }: { src: string }) => {
+  return <img src={src} alt="" loading="lazy" />;
+});
+
 interface AICardProps {
   website: AIWebsite;
   isFavorite: boolean;
@@ -97,50 +101,17 @@ interface AICardProps {
   style?: React.CSSProperties;
 }
 
-const AICard: React.FC<AICardProps> = ({
+const AICard: React.FC<AICardProps> = React.memo(({
   website,
   isFavorite,
   onFavoriteToggle,
   onClick,
   style,
 }) => {
-  const [isImageLoaded, setIsImageLoaded] = React.useState(false);
-  const imageRef = React.useRef<HTMLImageElement>(null);
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && imageRef.current) {
-            imageRef.current.src = `/ai/${website.icon}`;
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      {
-        rootMargin: '50px',
-      }
-    );
-
-    if (imageRef.current) {
-      observer.observe(imageRef.current);
-    }
-
-    return () => {
-      if (imageRef.current) {
-        observer.unobserve(imageRef.current);
-      }
-    };
-  }, [website.icon]);
-
-  const handleFavoriteClick = (e: React.MouseEvent) => {
+  const handleFavoriteClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     onFavoriteToggle();
-  };
-
-  const handleImageLoad = () => {
-    setIsImageLoaded(true);
-  };
+  }, [onFavoriteToggle]);
 
   const tooltipContent = (
     <TooltipContent>
@@ -152,12 +123,7 @@ const AICard: React.FC<AICardProps> = ({
   const cardContent = (
     <StyledCardContent>
       <IconContainer>
-        <img
-          ref={imageRef}
-          alt={website.title}
-          style={{ opacity: isImageLoaded ? 1 : 0, transition: 'opacity 0.3s' }}
-          onLoad={handleImageLoad}
-        />
+        <IconImage src={`/ai/${website.icon}`} />
       </IconContainer>
       <ContentContainer>
         <StyledTitle variant="subtitle1">
@@ -182,6 +148,10 @@ const AICard: React.FC<AICardProps> = ({
     </StyledCardContent>
   );
 
+  const handleCardClick = useCallback(() => {
+    onClick();
+  }, [onClick]);
+
   return (
     <Tooltip
       title={tooltipContent}
@@ -197,12 +167,12 @@ const AICard: React.FC<AICardProps> = ({
       }}
     >
       <div style={style}>
-        <StyledCard onClick={onClick}>
+        <StyledCard onClick={handleCardClick}>
           {cardContent}
         </StyledCard>
       </div>
     </Tooltip>
   );
-};
+});
 
 export default AICard;
