@@ -16,11 +16,13 @@ const ContentSection = styled(Box)(({ theme }) => ({
 interface WorkspaceAIProps {
   activeTag?: string;
   onTagChange: (tag: string) => void;
+  searchText?: string;
 }
 
 const WorkspaceAI: React.FC<WorkspaceAIProps> = ({
   activeTag = '写作工具',
   onTagChange,
+  searchText = '',
 }) => {
   const [favoriteWebsites, setFavoriteWebsites] = React.useState<string[]>([]);
 
@@ -43,13 +45,20 @@ const WorkspaceAI: React.FC<WorkspaceAIProps> = ({
   };
 
   const filteredWebsites = React.useMemo(() => {
-    if (activeTag === '全部') {
-      return AI_WEBSITES_UNIQUE;
-    }
-    return AI_WEBSITES_WITH_DUPLICATES.filter(website => 
+    let websites = activeTag === '全部' ? AI_WEBSITES_UNIQUE : AI_WEBSITES_WITH_DUPLICATES.filter(website => 
       website.tags?.includes(activeTag as AITagType)
     );
-  }, [activeTag]);
+
+    if (searchText) {
+      const lowerSearchText = searchText.toLowerCase();
+      websites = websites.filter(website =>
+        website.title.toLowerCase().includes(lowerSearchText) ||
+        website.description.toLowerCase().includes(lowerSearchText)
+      );
+    }
+
+    return websites;
+  }, [activeTag, searchText]);
 
   return (
     <ContentSection>

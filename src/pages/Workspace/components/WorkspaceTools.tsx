@@ -17,11 +17,13 @@ const ContentSection = styled(Box)(({ theme }) => ({
 interface WorkspaceToolsProps {
   selectedTag?: string;
   onTagChange?: (tag: string) => void;
+  searchText?: string;
 }
 
 const WorkspaceTools: React.FC<WorkspaceToolsProps> = ({
   selectedTag: propSelectedTag,
   onTagChange,
+  searchText = '',
 }) => {
   const { params, updateParams } = useQueryParams<{ toolTag: string }>({
     toolTag: '',
@@ -54,11 +56,20 @@ const WorkspaceTools: React.FC<WorkspaceToolsProps> = ({
   };
 
   const filteredTools = React.useMemo(() => {
-    if (!selectedTag) {
-      return TOOLS;
+    let tools = !selectedTag ? TOOLS : TOOLS.filter(tool => 
+      tool.tags.includes(selectedTag as TagType)
+    );
+
+    if (searchText) {
+      const lowerSearchText = searchText.toLowerCase();
+      tools = tools.filter(tool =>
+        tool.name.toLowerCase().includes(lowerSearchText) ||
+        tool.description.toLowerCase().includes(lowerSearchText)
+      );
     }
-    return TOOLS.filter(tool => tool.tags.includes(selectedTag as TagType));
-  }, [selectedTag]);
+
+    return tools;
+  }, [selectedTag, searchText]);
 
   return (
     <ContentSection>

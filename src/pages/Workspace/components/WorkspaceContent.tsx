@@ -8,6 +8,7 @@ import WorkspaceAI from './WorkspaceAI';
 import WorkspaceSearch from './WorkspaceSearch';
 import { formatDate } from '../../../utils/date';
 import { getStoredSearchEngine } from '../../../utils/storage';
+import useDebounce from '../../../hooks/useDebounce';
 
 interface WorkspaceContentProps {
   activeTab: string;
@@ -60,6 +61,8 @@ const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
 }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [searchEngine, setSearchEngine] = useState(() => getStoredSearchEngine() || 'google');
+  const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 300);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -71,6 +74,10 @@ const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
 
   const handleSearchEngineChange = (engine: string) => {
     setSearchEngine(engine);
+  };
+
+  const handleSearchTextChange = (text: string) => {
+    setSearchText(text);
   };
 
   const renderTitle = () => {
@@ -119,7 +126,11 @@ const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
       {renderTime()}
       {renderTitle()}
       <Box sx={{ width: '100%', maxWidth: '600px', mb: 4 }}>
-        <WorkspaceSearch onSearchEngineChange={handleSearchEngineChange} />
+        <WorkspaceSearch 
+          onSearchEngineChange={handleSearchEngineChange} 
+          onSearchTextChange={handleSearchTextChange}
+          searchText={searchText}
+        />
       </Box>
       
       <Box
@@ -137,10 +148,17 @@ const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
           <WorkspaceTools
             selectedTag={selectedToolTags?.[0] || ''}
             onTagChange={tag => onToolTagsChange?.([tag])}
+            searchText={debouncedSearchText}
           />
         )}
         {activeTab === 'websites' && <WorkspaceWebsites />}
-        {activeTab === 'ai' && <WorkspaceAI activeTag={activeTag} onTagChange={onTagChange} />}
+        {activeTab === 'ai' && (
+          <WorkspaceAI 
+            activeTag={activeTag} 
+            onTagChange={onTagChange} 
+            searchText={debouncedSearchText}
+          />
+        )}
       </Box>
     </Container>
   );
