@@ -52,17 +52,8 @@ const ModuleTitle = styled(Typography)(({ theme }) => ({
   marginBottom: theme.spacing(4),
 }));
 
-const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
-  activeTab,
-  activeTag,
-  onTagChange,
-  selectedToolTags,
-  onToolTagsChange,
-}) => {
+const TimeDisplay = React.memo(() => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [searchEngine, setSearchEngine] = useState(() => getStoredSearchEngine() || 'google');
-  const [searchText, setSearchText] = useState('');
-  const debouncedSearchText = useDebounce(searchText, 300);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -71,6 +62,42 @@ const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
 
     return () => clearInterval(timer);
   }, []);
+
+  return (
+    <Typography variant="h4" component="div" sx={{ textAlign: 'center', color: 'white', fontSize: '3rem' }}>
+      {currentTime.toLocaleTimeString()}
+    </Typography>
+  );
+});
+
+const DateDisplay = React.memo(() => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDate(new Date());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <DateText>
+      {formatDate(currentDate)}
+    </DateText>
+  );
+});
+
+const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
+  activeTab,
+  activeTag,
+  onTagChange,
+  selectedToolTags,
+  onToolTagsChange,
+}) => {
+  const [searchEngine, setSearchEngine] = useState(() => getStoredSearchEngine() || 'google');
+  const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 300);
 
   const handleSearchEngineChange = (engine: string) => {
     setSearchEngine(engine);
@@ -109,12 +136,8 @@ const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
     if (activeTab === 'home') {
       return (
         <>
-          <TimeText>
-            {currentTime.toLocaleTimeString('en-US', { hour12: false })}
-          </TimeText>
-          <DateText>
-            {formatDate(currentTime)}
-          </DateText>
+          <TimeDisplay />
+          <DateDisplay />
         </>
       );
     }

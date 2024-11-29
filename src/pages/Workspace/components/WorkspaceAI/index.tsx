@@ -1,8 +1,9 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Box, Grid } from '@mui/material';
+import { Box } from '@mui/material';
 import AICard from '../../../../components/common/AICard';
 import TagFilter from '../../../../components/common/TagFilter';
+import VirtualGrid from '../../../../components/common/VirtualGrid';
 import { AI_WEBSITES_WITH_DUPLICATES, AI_WEBSITES_UNIQUE, AI_TAGS, TAG_TO_ICON } from '../../../../constants/ai';
 import { getFavoriteAIWebsites, toggleFavoriteAIWebsite } from '../../../../utils/storage';
 import { AITagType } from '../../../../types/ai';
@@ -19,7 +20,7 @@ interface WorkspaceAIProps {
   searchText?: string;
 }
 
-const WorkspaceAI: React.FC<WorkspaceAIProps> = ({
+const WorkspaceAI: React.FC<WorkspaceAIProps> = React.memo(({
   activeTag = '写作工具',
   onTagChange,
   searchText = '',
@@ -79,20 +80,23 @@ const WorkspaceAI: React.FC<WorkspaceAIProps> = ({
           singleSelect
         />
       </Box>
-      <Grid container spacing={2}>
-        {filteredWebsites.map((website, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={`${website.title}-${index}`}>
-            <AICard
-              website={website}
-              onClick={() => handleWebsiteClick(website.url)}
-              onFavoriteToggle={() => handleFavoriteToggle(website.title)}
-              isFavorite={favoriteWebsites.includes(website.title)}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      <VirtualGrid
+        items={filteredWebsites}
+        itemHeight={100}
+        minItemWidth={300}
+        gap={16}
+        renderItem={(website, style) => (
+          <AICard
+            website={website}
+            onClick={() => handleWebsiteClick(website.url)}
+            onFavoriteToggle={() => handleFavoriteToggle(website.title)}
+            isFavorite={favoriteWebsites.includes(website.title)}
+            style={style}
+          />
+        )}
+      />
     </ContentSection>
   );
-};
+});
 
 export default WorkspaceAI;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
-import { Card, CardContent, Typography, IconButton, Box, Tooltip } from '@mui/material';
+import { Card, CardContent, Typography, IconButton, Tooltip } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { AIWebsite } from '../../types/ai';
@@ -21,16 +21,16 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-const StyledCardContent = styled(CardContent)({
-  padding: '12px !important',
+const StyledCardContent = styled(CardContent)(({ theme }) => ({
+  padding: '10px 12px 4px !important',
   display: 'flex',
   alignItems: 'center',
   gap: '12px',
   position: 'relative',
   '&:last-child': {
-    paddingBottom: '12px !important',
+    paddingBottom: '4px !important',
   },
-});
+}));
 
 const IconContainer = styled('div')({
   width: 48,
@@ -94,6 +94,7 @@ interface AICardProps {
   isFavorite: boolean;
   onFavoriteToggle: () => void;
   onClick: () => void;
+  style?: React.CSSProperties;
 }
 
 const AICard: React.FC<AICardProps> = ({
@@ -101,6 +102,7 @@ const AICard: React.FC<AICardProps> = ({
   isFavorite,
   onFavoriteToggle,
   onClick,
+  style,
 }) => {
   const [isImageLoaded, setIsImageLoaded] = React.useState(false);
   const imageRef = React.useRef<HTMLImageElement>(null);
@@ -181,32 +183,24 @@ const AICard: React.FC<AICardProps> = ({
   );
 
   return (
-    <Tooltip 
+    <Tooltip
       title={tooltipContent}
       placement="top"
       arrow
-      enterDelay={200}
-      leaveDelay={0}
-      sx={{
-        '& .MuiTooltip-tooltip': {
-          backgroundColor: 'rgba(0, 0, 0, 0.85)',
-          backdropFilter: 'blur(10px)',
-          padding: '12px 16px',
-          maxWidth: 320,
-          marginBottom: '8px !important',
-        },
-        '& .MuiTooltip-arrow': {
-          color: 'rgba(0, 0, 0, 0.85)',
-          '&::before': {
-            backgroundColor: 'rgba(0, 0, 0, 0.85)',
-            backdropFilter: 'blur(10px)',
+      PopperProps={{
+        modifiers: [{
+          name: 'offset',
+          options: {
+            offset: [0, -8],
           },
-        },
+        }],
       }}
     >
-      <StyledCard onClick={onClick}>
-        {cardContent}
-      </StyledCard>
+      <div style={style}>
+        <StyledCard onClick={onClick}>
+          {cardContent}
+        </StyledCard>
+      </div>
     </Tooltip>
   );
 };
