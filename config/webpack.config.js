@@ -701,6 +701,20 @@ module.exports = function (webpackEnv) {
           filename: 'static/css/[name].[contenthash:8].css',
           chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
         }),
+      // Add progress plugin
+      isEnvDevelopment && new webpack.ProgressPlugin({
+        percentBy: 'entries',
+        handler: (percentage, message, ...args) => {
+          const stdout = process.stdout;
+          if (percentage === 0) {
+            stdout.write('\n');
+          }
+          stdout.write(`\r${(percentage * 100).toFixed(2)}% ${message} ${args.join(' ')}`);
+          if (percentage === 1) {
+            stdout.write('\n');
+          }
+        },
+      }),
       // Generate an asset manifest file with the following content:
       // - "files" key: Mapping of all asset filenames to their corresponding
       //   output file so that tools can pick it up without having to parse
