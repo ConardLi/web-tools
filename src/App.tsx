@@ -16,8 +16,8 @@ const App: FC = () => {
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/workspace" element={<Workspace />} />
+        {/* <Route path="/" element={<HomePage />} /> */}
+        <Route path="/" element={<Workspace />} />
         <Route path="/tools/qr-generator" element={<QRGenerator />} />
         <Route path="/tools/json-formatter" element={<JSONFormatter />} />
         <Route path="/tools/color-palette" element={<ColorPalette />} />

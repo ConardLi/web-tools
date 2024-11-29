@@ -18,7 +18,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import AllInclusiveIcon from '@mui/icons-material/AllInclusive';
 import { SvgIconTypeMap } from '@mui/material';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
-import aiData from './ai-local.json';
+import aiData from './ai.json';
 
 export const AI_TAGS: AITagType[] = [
   '全部',
