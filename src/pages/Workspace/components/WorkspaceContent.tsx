@@ -33,7 +33,7 @@ const TimeText = styled(Typography)(({ theme }) => ({
   color: 'rgba(255, 255, 255, 0.9)',
   fontWeight: 300,
   textAlign: 'center',
-  marginBottom: theme.spacing(1),
+  marginBottom: 0,
 }));
 
 const DateText = styled(Typography)(({ theme }) => ({
@@ -46,10 +46,17 @@ const DateText = styled(Typography)(({ theme }) => ({
 
 const ModuleTitle = styled(Typography)(({ theme }) => ({
   fontSize: '3rem',
-  color: 'rgba(255, 255, 255, 0.9)',
-  fontWeight: 300,
+  background: 'linear-gradient(45deg, #FF8E53 30%, #FE6B8B 90%)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  fontWeight: 700,
   textAlign: 'center',
   marginBottom: theme.spacing(4),
+  transition: 'all 0.3s ease-in-out',
+  letterSpacing: '0.5px',
+  '&:hover': {
+    transform: 'scale(1.02)',
+  },
 }));
 
 const TimeDisplay = React.memo(() => {
@@ -112,7 +119,7 @@ const WorkspaceContent: React.FC<WorkspaceContentProps> = ({
       case 'ai':
         return (
           <ModuleTitle>
-            AI 工具箱
+            AI 工具集
           </ModuleTitle>
         );
       case 'tools':

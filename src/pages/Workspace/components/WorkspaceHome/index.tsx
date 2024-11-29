@@ -2,9 +2,11 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Typography, Grid } from '@mui/material';
 import ToolCard from '../../../../components/common/ToolCard';
+import SimpleAICard from '../../../../components/common/SimpleAICard';
 import { TOOLS } from '../../../../constants/tools';
 import { WEBSITES } from '../../../../constants/websites';
-import { getFavoriteTools, getFavoriteWebsites } from '../../../../utils/storage';
+import { AI_WEBSITES_UNIQUE } from '../../../../constants/ai';
+import { getFavoriteTools, getFavoriteWebsites, getFavoriteAIWebsites } from '../../../../utils/storage';
 
 const ContentSection = styled(Box)(({ theme }) => ({
   width: '100%',
@@ -27,10 +29,12 @@ const Section = styled(Box)(({ theme }) => ({
 const WorkspaceHome: React.FC = () => {
   const [favoriteTools, setFavoriteTools] = React.useState<string[]>([]);
   const [favoriteWebsites, setFavoriteWebsites] = React.useState<string[]>([]);
+  const [favoriteAIWebsites, setFavoriteAIWebsites] = React.useState<string[]>([]);
 
   React.useEffect(() => {
     setFavoriteTools(getFavoriteTools());
     setFavoriteWebsites(getFavoriteWebsites());
+    setFavoriteAIWebsites(getFavoriteAIWebsites());
   }, []);
 
   const handleToolClick = (toolId: string) => {
@@ -41,10 +45,22 @@ const WorkspaceHome: React.FC = () => {
     window.open(url, '_blank');
   };
 
+  const handleAIWebsiteFavoriteToggle = (websiteTitle: string) => {
+    setFavoriteAIWebsites(prevFavorites => {
+      const newFavorites = [...prevFavorites];
+      const index = newFavorites.indexOf(websiteTitle);
+      if (index === -1) {
+        newFavorites.push(websiteTitle);
+      } else {
+        newFavorites.splice(index, 1);
+      }
+      return newFavorites;
+    });
+  };
+
   const favoriteToolsList = TOOLS.filter(tool => favoriteTools.includes(tool.id));
   const favoriteWebsitesList = WEBSITES.filter(website => favoriteWebsites.includes(website.id));
-  const favoriteAIWebsites = favoriteWebsitesList.filter(website => website.tags.includes('AI工具'));
-  const favoriteNormalWebsites = favoriteWebsitesList.filter(website => !website.tags.includes('AI工具'));
+  const favoriteAIWebsitesList = AI_WEBSITES_UNIQUE.filter(website => favoriteAIWebsites.includes(website.title));
 
   return (
     <ContentSection>
@@ -65,11 +81,11 @@ const WorkspaceHome: React.FC = () => {
         </Section>
       )}
 
-      {favoriteNormalWebsites.length > 0 && (
+      {favoriteWebsitesList.length > 0 && (
         <Section>
           <SectionTitle>收藏的网站</SectionTitle>
           <Grid container spacing={1.5}>
-            {favoriteNormalWebsites.map((website) => (
+            {favoriteWebsitesList.map((website) => (
               <Grid item xs={3} sm={2} md={1.5} lg={1} key={website.id}>
                 <ToolCard
                   name={website.name}
@@ -82,15 +98,14 @@ const WorkspaceHome: React.FC = () => {
         </Section>
       )}
 
-      {favoriteAIWebsites.length > 0 && (
+      {favoriteAIWebsitesList.length > 0 && (
         <Section>
           <SectionTitle>收藏的 AI 工具</SectionTitle>
           <Grid container spacing={1.5}>
-            {favoriteAIWebsites.map((website) => (
-              <Grid item xs={3} sm={2} md={1.5} lg={1} key={website.id}>
-                <ToolCard
-                  name={website.name}
-                  icon={website.icon}
+            {favoriteAIWebsitesList.map((website) => (
+              <Grid item xs={3} sm={2} md={1.5} lg={1} key={website.title}>
+                <SimpleAICard
+                  website={website}
                   onClick={() => handleWebsiteClick(website.url)}
                 />
               </Grid>
