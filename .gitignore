@@ -3,3 +3,4 @@ build
 .vscode
 website-local.json
 ai-local.json
+.next
